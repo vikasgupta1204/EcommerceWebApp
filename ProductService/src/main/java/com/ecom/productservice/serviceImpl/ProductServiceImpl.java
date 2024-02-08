@@ -1,18 +1,23 @@
 package com.ecom.productservice.serviceImpl;
 
+import com.ecom.productservice.models.Product;
 import com.ecom.productservice.services.ProductService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service("selfProductServiceImpl")
 public class ProductServiceImpl implements ProductService {
     @Override
-    public String getProductById(Long id) {
-        return "product fetched with id "+id;
+    public ResponseEntity<Product> getProductById(Long id) {
+        return null;
     }
 
     @Override
-    public void getAllProducts() {
+    public ResponseEntity<List<Product>> getAllProducts() {
 
+        return null;
     }
 
     @Override
@@ -21,8 +26,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void addProduct() {
-
+    public Product addProduct(Product product) {
+      return null;
     }
 
     @Override

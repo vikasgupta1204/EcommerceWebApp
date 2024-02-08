@@ -9,7 +9,7 @@ import lombok.Setter;
 public class Product extends BaseModel{
     private String title;
     private String desc;
-    private String price;
+    private Long price;
     private Category category;
 
 }

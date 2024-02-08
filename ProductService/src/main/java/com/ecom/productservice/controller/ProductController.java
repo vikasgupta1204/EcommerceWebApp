@@ -1,13 +1,14 @@
 package com.ecom.productservice.controller;
 
+import com.ecom.productservice.dtos.ExceptionDto;
+import com.ecom.productservice.exceptions.ProductNotFoundException;
 import com.ecom.productservice.models.Product;
 import com.ecom.productservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -24,18 +25,25 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public String getProductById(@PathVariable Long id){
-        return productService.getProductById(id );
+    public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) throws ProductNotFoundException {
+        return productService.getProductById(id);
     }
 
-    public List<String> getAllProducts(){
-        return Collections.emptyList();
+    @GetMapping("/all")
+    public ResponseEntity<List<Product>> getAllProducts(){
+        return productService.getAllProducts();
     }
 /**
     public String getProductByCategory(String category){
         return
     }
  */
+
+@PostMapping("/create")
+public Product createProduct(@RequestBody Product product){
+    return productService.addProduct(product);
+}
+
 }
 
 /**

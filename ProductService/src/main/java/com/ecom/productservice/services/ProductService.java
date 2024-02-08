@@ -1,10 +1,16 @@
 package com.ecom.productservice.services;
 
+import com.ecom.productservice.exceptions.ProductNotFoundException;
+import com.ecom.productservice.models.Product;
+import org.springframework.http.ResponseEntity;
+
+import java.util.List;
+
 public interface ProductService {
-    String getProductById(Long id);
-    void getAllProducts();
+    ResponseEntity<Product> getProductById(Long id) throws ProductNotFoundException;
+    ResponseEntity<List<Product>> getAllProducts();
     void deleteProductById();
-    void addProduct();
+    Product addProduct(Product product);
     void updateProductById();
 
 }

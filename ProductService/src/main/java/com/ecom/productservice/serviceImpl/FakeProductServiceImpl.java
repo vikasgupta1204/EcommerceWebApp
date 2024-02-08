@@ -1,15 +1,27 @@
 package com.ecom.productservice.serviceImpl;
 
+import com.ecom.productservice.dtos.FakeProductDto;
+import com.ecom.productservice.exceptions.ProductNotFoundException;
+import com.ecom.productservice.models.Category;
+import com.ecom.productservice.models.Product;
 import com.ecom.productservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.lang.invoke.MethodHandleInfo;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Service("fakeProductServiceImpl")
 public class FakeProductServiceImpl implements ProductService {
-    private String getProductUrl="https://fakestoreapi.com/products/1";
+    private String getProductUrl="https://fakestoreapi.com/products/{id}";
+    private String getAllProductsUrl="https://fakestoreapi.com/products";
+    private String addProductUrl="https://fakestoreapi.com/products";
     RestTemplateBuilder restTemplateBuilder;
 
     @Autowired
@@ -18,16 +30,41 @@ public class FakeProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String getProductById(Long id) {
+    public ResponseEntity<Product> getProductById(Long id) throws ProductNotFoundException {
         RestTemplate restTemplate=restTemplateBuilder.build();
-        ResponseEntity<String> responseEntity= restTemplate.getForEntity(getProductUrl,String.class);
-        return "Calling fake product service "+responseEntity.toString();
+        ResponseEntity<FakeProductDto> responseEntity= restTemplate.getForEntity(getProductUrl, FakeProductDto.class,id);
+        if(responseEntity.getBody()==null){
+            throw  new ProductNotFoundException("Product not found with id:"+id);
+        }
+        Product product= fakeProductDtoToProduct(responseEntity.getBody());
+        return new ResponseEntity<>(product,HttpStatus.OK);
+    }
+
+    private Product fakeProductDtoToProduct(FakeProductDto body) {
+        Product product=new Product();
+        product.setId(body.getId());
+        product.setDesc(body.getDescription());
+        Category category=new Category();
+        category.setName(body.getCategory());
+        product.setCategory(category);
+        product.setPrice(body.getPrice());
+        product.setTitle(body.getTitle());
+        return product;
+
     }
 
     @Override
-    public void getAllProducts() {
-
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> prodLists=new ArrayList<>();
+        RestTemplate restTemplate=restTemplateBuilder.build();
+        ResponseEntity<FakeProductDto[]> fakeProductDtoResponseEntity=
+                restTemplate.getForEntity(getAllProductsUrl,FakeProductDto[].class);
+        Arrays.stream(fakeProductDtoResponseEntity.getBody()).forEach(
+                fkr->prodLists.add(fakeProductDtoToProduct(fkr))
+        );
+        return new ResponseEntity<>(prodLists, HttpStatus.OK);
     }
+
 
     @Override
     public void deleteProductById() {
@@ -35,8 +72,20 @@ public class FakeProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void addProduct() {
+    public Product addProduct(Product product) {
+        RestTemplate restTemplate=restTemplateBuilder.build();
+        FakeProductDto fakeProductDto=productToFakeProductDto(product);
+        ResponseEntity<FakeProductDto> fakeProductDtoResponseEntity= restTemplate.postForEntity(addProductUrl,fakeProductDto,FakeProductDto.class);
+        return fakeProductDtoToProduct(fakeProductDtoResponseEntity.getBody());
+    }
 
+    private FakeProductDto productToFakeProductDto(Product product) {
+        FakeProductDto fakeProductDto=new FakeProductDto();
+        fakeProductDto.setPrice(product.getPrice());
+        fakeProductDto.setTitle(product.getTitle());
+        fakeProductDto.setDescription(product.getDesc());
+        fakeProductDto.setCategory(product.getCategory().getName());
+        return fakeProductDto;
     }
 
     @Override
