@@ -9,7 +9,7 @@ import java.util.List;
 public interface ProductService {
     ResponseEntity<Product> getProductById(Long id) throws ProductNotFoundException;
     ResponseEntity<List<Product>> getAllProducts();
-    void deleteProductById();
+    Product deleteProductById(long id);
     Product addProduct(Product product);
     void updateProductById();
 

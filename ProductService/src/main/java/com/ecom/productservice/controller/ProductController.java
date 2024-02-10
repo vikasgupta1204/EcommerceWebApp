@@ -44,7 +44,13 @@ public Product createProduct(@RequestBody Product product){
     return productService.addProduct(product);
 }
 
+    @DeleteMapping("/{id}")
+    public  Product deleteProductById(@PathVariable long id){
+       return productService.deleteProductById(id);
+    }
+
 }
+
 
 /**
  * 1. GetProductById(id)

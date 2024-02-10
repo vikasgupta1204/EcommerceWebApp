@@ -7,9 +7,13 @@ import com.ecom.productservice.models.Product;
 import com.ecom.productservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.client.HttpMessageConverterExtractor;
+import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.invoke.MethodHandleInfo;
@@ -22,6 +26,7 @@ public class FakeProductServiceImpl implements ProductService {
     private String getProductUrl="https://fakestoreapi.com/products/{id}";
     private String getAllProductsUrl="https://fakestoreapi.com/products";
     private String addProductUrl="https://fakestoreapi.com/products";
+    private String deleteProductUrl="https://fakestoreapi.com/products/{id}";
     RestTemplateBuilder restTemplateBuilder;
 
     @Autowired
@@ -67,8 +72,15 @@ public class FakeProductServiceImpl implements ProductService {
 
 
     @Override
-    public void deleteProductById() {
-
+    public Product deleteProductById(long id) {
+        RestTemplate restTemplate=restTemplateBuilder.build();
+        RequestCallback requestCallback = restTemplate.acceptHeaderRequestCallback(FakeProductDto.class);
+        HttpMessageConverterExtractor<FakeProductDto> responseExtractor = new HttpMessageConverterExtractor(FakeProductDto.class, restTemplate.getMessageConverters());
+        FakeProductDto fakeProductDto=
+                restTemplate.execute(deleteProductUrl, HttpMethod.DELETE, requestCallback, responseExtractor,id);
+        Product product=fakeProductDtoToProduct(fakeProductDto);
+        return product;
+        //restTemplate.delete(deleteProductUrl,id);
     }
 
     @Override
