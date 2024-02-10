@@ -5,6 +5,7 @@ import com.ecom.productservice.exceptions.ProductNotFoundException;
 import com.ecom.productservice.models.Category;
 import com.ecom.productservice.models.Product;
 import com.ecom.productservice.services.ProductService;
+import com.ecom.productservice.thirdPartyClients.FakeStoreClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
@@ -23,25 +24,17 @@ import java.util.List;
 
 @Service("fakeProductServiceImpl")
 public class FakeProductServiceImpl implements ProductService {
-    private String getProductUrl="https://fakestoreapi.com/products/{id}";
-    private String getAllProductsUrl="https://fakestoreapi.com/products";
-    private String addProductUrl="https://fakestoreapi.com/products";
-    private String deleteProductUrl="https://fakestoreapi.com/products/{id}";
-    RestTemplateBuilder restTemplateBuilder;
 
+    private FakeStoreClient fakeStoreClient;
     @Autowired
-    public FakeProductServiceImpl(RestTemplateBuilder restTemplateBuilder) {
-        this.restTemplateBuilder = restTemplateBuilder;
+    public FakeProductServiceImpl(FakeStoreClient fakeStoreClient) {
+    this.fakeStoreClient=fakeStoreClient;
     }
 
     @Override
     public ResponseEntity<Product> getProductById(Long id) throws ProductNotFoundException {
-        RestTemplate restTemplate=restTemplateBuilder.build();
-        ResponseEntity<FakeProductDto> responseEntity= restTemplate.getForEntity(getProductUrl, FakeProductDto.class,id);
-        if(responseEntity.getBody()==null){
-            throw  new ProductNotFoundException("Product not found with id:"+id);
-        }
-        Product product= fakeProductDtoToProduct(responseEntity.getBody());
+
+        Product product= fakeProductDtoToProduct(fakeStoreClient.getProductById(id));
         return new ResponseEntity<>(product,HttpStatus.OK);
     }
 
@@ -60,35 +53,25 @@ public class FakeProductServiceImpl implements ProductService {
 
     @Override
     public ResponseEntity<List<Product>> getAllProducts() {
+        List<FakeProductDto> fakeProductDtos=fakeStoreClient.getAllProducts();
         List<Product> prodLists=new ArrayList<>();
-        RestTemplate restTemplate=restTemplateBuilder.build();
-        ResponseEntity<FakeProductDto[]> fakeProductDtoResponseEntity=
-                restTemplate.getForEntity(getAllProductsUrl,FakeProductDto[].class);
-        Arrays.stream(fakeProductDtoResponseEntity.getBody()).forEach(
-                fkr->prodLists.add(fakeProductDtoToProduct(fkr))
-        );
+        fakeProductDtos.stream().forEach(fakeProductDto ->prodLists.add( fakeProductDtoToProduct(fakeProductDto)));
         return new ResponseEntity<>(prodLists, HttpStatus.OK);
     }
 
 
     @Override
     public Product deleteProductById(long id) {
-        RestTemplate restTemplate=restTemplateBuilder.build();
-        RequestCallback requestCallback = restTemplate.acceptHeaderRequestCallback(FakeProductDto.class);
-        HttpMessageConverterExtractor<FakeProductDto> responseExtractor = new HttpMessageConverterExtractor(FakeProductDto.class, restTemplate.getMessageConverters());
-        FakeProductDto fakeProductDto=
-                restTemplate.execute(deleteProductUrl, HttpMethod.DELETE, requestCallback, responseExtractor,id);
-        Product product=fakeProductDtoToProduct(fakeProductDto);
+        Product product=fakeProductDtoToProduct(fakeStoreClient.deleteProductById(id));
         return product;
-        //restTemplate.delete(deleteProductUrl,id);
     }
 
     @Override
     public Product addProduct(Product product) {
-        RestTemplate restTemplate=restTemplateBuilder.build();
+
         FakeProductDto fakeProductDto=productToFakeProductDto(product);
-        ResponseEntity<FakeProductDto> fakeProductDtoResponseEntity= restTemplate.postForEntity(addProductUrl,fakeProductDto,FakeProductDto.class);
-        return fakeProductDtoToProduct(fakeProductDtoResponseEntity.getBody());
+        FakeProductDto savedFakeProduct= fakeStoreClient.addProduct(fakeProductDto);
+        return fakeProductDtoToProduct(savedFakeProduct);
     }
 
     private FakeProductDto productToFakeProductDto(Product product) {
