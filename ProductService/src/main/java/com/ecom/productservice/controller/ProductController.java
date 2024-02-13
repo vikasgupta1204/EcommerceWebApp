@@ -49,6 +49,11 @@ public Product createProduct(@RequestBody Product product){
        return productService.deleteProductById(id);
     }
 
+    @PutMapping("/{id}")
+    public Product updateProductById(@PathVariable long id,@RequestBody Product product) throws ProductNotFoundException {
+    return productService.updateProductById(id,product);
+    }
+
 }
 
 
