@@ -8,12 +8,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-//@Entity
+@Entity
 public class Product extends BaseModel{
     private String title;
     private String description;
     private Long price;
-   // @ManyToOne
+    @ManyToOne
     private Category category;
 
 }

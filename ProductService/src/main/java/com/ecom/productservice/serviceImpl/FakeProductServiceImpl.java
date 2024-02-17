@@ -88,4 +88,14 @@ public class FakeProductServiceImpl implements ProductService {
        FakeProductDto fakeProductDto= fakeStoreClient.updateProductById(id,productToFakeProductDto(product));
         return fakeProductDtoToProduct(fakeProductDto);
     }
+
+    @Override
+    public List<String> getAllCategory() {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<Product>> getInCategory(String category) {
+        return null;
+    }
 }

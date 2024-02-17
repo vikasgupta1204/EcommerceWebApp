@@ -20,7 +20,7 @@ public class ProductController {
 
     private ProductService productService;
     @Autowired
-    public ProductController(@Qualifier("fakeProductServiceImpl") ProductService productService) {
+    public ProductController(@Qualifier("SelfProductServiceImpl") ProductService productService) {
         this.productService = productService;
     }
 
@@ -45,7 +45,7 @@ public Product createProduct(@RequestBody Product product){
 }
 
     @DeleteMapping("/{id}")
-    public  Product deleteProductById(@PathVariable long id){
+    public  Product deleteProductById(@PathVariable long id) throws ProductNotFoundException {
        return productService.deleteProductById(id);
     }
 
@@ -54,6 +54,16 @@ public Product createProduct(@RequestBody Product product){
     return productService.updateProductById(id,product);
     }
 
+    @GetMapping("/categories")
+    @ResponseStatus(HttpStatus.OK)
+    public List<String> categories(){
+        return productService.getAllCategory();
+    }
+
+    @GetMapping("/category/{category}")
+    public  ResponseEntity<List<Product>> getInCategory(@PathVariable String category) throws ProductNotFoundException {
+        return productService.getInCategory(category);
+    }
 }
 
 
