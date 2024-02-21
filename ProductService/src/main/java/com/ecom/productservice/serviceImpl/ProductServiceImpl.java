@@ -56,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product addProduct(Product product) {
-      Optional<Category> categoryOptional=categoryRepo.findByName(product.getCategory().getName());
+     /* Optional<Category> categoryOptional=categoryRepo.findByName(product.getCategory().getName());
       if (!categoryOptional.isPresent()){
           Category savedCategory= categoryRepo.save(product.getCategory());
           product.setCategory(savedCategory);
@@ -64,7 +64,14 @@ public class ProductServiceImpl implements ProductService {
       else{
           product.setCategory(categoryOptional.get());
       }
-
+    */
+        Optional<Category> categoryOptional=categoryRepo.findByName(product.getCategory().getName());
+        if(categoryOptional.isPresent()){
+            product.setCategory(categoryOptional.get());
+        }
+        else {
+            product.setCategory(product.getCategory());
+        }
         return productRepo.save(product);
     }
 
@@ -78,11 +85,11 @@ public class ProductServiceImpl implements ProductService {
         }
         Product actualProduct=productOptional.get();
        /*Checking if category is provided by the client for updation or not*/
-        if(product.getCategory()!=null&&!product.getCategory().getName().equalsIgnoreCase(actualProduct.getCategory().getName())){
-        Optional<Category> categoryOptional= categoryRepo.findByName(product.getCategory().getName());
+  /*      if(product.getCategory()!=null&&!product.getCategory().getName().equalsIgnoreCase(actualProduct.getCategory().getName())){
+        Optional<Category> categoryOptional= categoryRepo.findByName(product.getCategory().getName()); */
         /*Check if provided category already exists in the database or not. if yes then update the category of the product otherwise
-        * first create new category and add it into the database and then save it with product*/
-        if(!categoryOptional.isPresent()){
+         first create new category and add it into the database and then save it with product*/
+ /*       if(!categoryOptional.isPresent()){
             Category savedCategory=categoryRepo.save(product.getCategory());
             logger.info("new Category added:"+savedCategory.getName());
             actualProduct.setCategory(savedCategory);
@@ -91,9 +98,18 @@ public class ProductServiceImpl implements ProductService {
             actualProduct.setCategory(product.getCategory());
         }
         }
+   */
+
         actualProduct.setTitle(product.getTitle());
         actualProduct.setDescription(product.getDescription());
         actualProduct.setPrice(product.getPrice());
+        Optional<Category> categoryOptional=categoryRepo.findByName(product.getCategory().getName());
+        if(categoryOptional.isPresent()){
+          actualProduct.setCategory(categoryOptional.get());
+        }
+        else {
+            actualProduct.setCategory(product.getCategory());
+        }
         return  productRepo.save(actualProduct);
     }
 
