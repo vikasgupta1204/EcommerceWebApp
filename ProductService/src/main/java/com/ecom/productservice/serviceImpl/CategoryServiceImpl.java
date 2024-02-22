@@ -13,10 +13,12 @@ import java.util.Optional;
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private CategoryRepo categoryRepo;
+
     @Autowired
-    public CategoryServiceImpl(CategoryRepo categoryRepo){
-        this.categoryRepo=categoryRepo;
+    public CategoryServiceImpl(CategoryRepo categoryRepo) {
+        this.categoryRepo = categoryRepo;
     }
+
     @Override
     public Category saveCategory(Category category) {
         return categoryRepo.save(category);
@@ -24,9 +26,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category findByCategoryId(long categoryId) {
-        Optional<Category> categoryOptional=categoryRepo.findById(categoryId);
-        if(!categoryOptional.isPresent()){
-            throw  new CategoryNotFoundException("Category not found  with id "+categoryId);
+        Optional<Category> categoryOptional = categoryRepo.findById(categoryId);
+        if (!categoryOptional.isPresent()) {
+            throw new CategoryNotFoundException("Category not found  with id " + categoryId);
         }
         return categoryOptional.get();
     }
@@ -48,9 +50,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category findByCategoryName(String categoryName) {
-        Optional<Category> categoryOptional=categoryRepo.findByName(categoryName);
-        if(!categoryOptional.isPresent()){
-            throw  new CategoryNotFoundException("Category not found  with name "+categoryName);
+        Optional<Category> categoryOptional = categoryRepo.findByName(categoryName);
+        if (!categoryOptional.isPresent()) {
+            throw new CategoryNotFoundException("Category not found  with name " + categoryName);
         }
         return categoryOptional.get();
     }

@@ -14,8 +14,8 @@ public class CategoryControllerAdvice {
     @ExceptionHandler(CategoryNotFoundException.class)
 //@ResponseStatus(HttpStatus.NOT_FOUND)
 //@ResponseBody
-    private ResponseEntity<ExceptionDto> handleCategoryNotFoundException(CategoryNotFoundException categoryNotFoundException){
-        ExceptionDto exceptionDto=new ExceptionDto();
+    private ResponseEntity<ExceptionDto> handleCategoryNotFoundException(CategoryNotFoundException categoryNotFoundException) {
+        ExceptionDto exceptionDto = new ExceptionDto();
         exceptionDto.setMessage(categoryNotFoundException.getMessage());
         exceptionDto.setStatus("Failure");
         return new ResponseEntity<>(exceptionDto, HttpStatus.NOT_FOUND);

@@ -30,64 +30,60 @@ public class FakeStoreClient {
     RestTemplateBuilder restTemplateBuilder;
 
     @Autowired
-    public FakeStoreClient(RestTemplateBuilder restTemplateBuilder,@Value("${fakestore.api.url}") String genericUrl) {
+    public FakeStoreClient(RestTemplateBuilder restTemplateBuilder, @Value("${fakestore.api.url}") String genericUrl) {
         this.restTemplateBuilder = restTemplateBuilder;
-        this.genericUrl=genericUrl;
+        this.genericUrl = genericUrl;
     }
 
 
     public FakeProductDto getProductById(Long id) throws ProductNotFoundException {
-        RestTemplate restTemplate=restTemplateBuilder.build();
-        ResponseEntity<FakeProductDto> responseEntity= restTemplate.getForEntity(genericUrl+"/"+id, FakeProductDto.class);
-        if(responseEntity.getBody()==null){
-            throw  new ProductNotFoundException("Product not found with id:"+id);
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        ResponseEntity<FakeProductDto> responseEntity = restTemplate.getForEntity(genericUrl + "/" + id, FakeProductDto.class);
+        if (responseEntity.getBody() == null) {
+            throw new ProductNotFoundException("Product not found with id:" + id);
         }
         return responseEntity.getBody();
     }
 
 
-
-
     public List<FakeProductDto> getAllProducts() {
-        RestTemplate restTemplate=restTemplateBuilder.build();
-        ResponseEntity<FakeProductDto[]> fakeProductDtoResponseEntity=
-                restTemplate.getForEntity(genericUrl,FakeProductDto[].class);
-        List<FakeProductDto> fakeProductDtos= Arrays.asList(fakeProductDtoResponseEntity.getBody());
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        ResponseEntity<FakeProductDto[]> fakeProductDtoResponseEntity =
+                restTemplate.getForEntity(genericUrl, FakeProductDto[].class);
+        List<FakeProductDto> fakeProductDtos = Arrays.asList(fakeProductDtoResponseEntity.getBody());
         return fakeProductDtos;
     }
 
 
-
     public FakeProductDto deleteProductById(long id) {
-        RestTemplate restTemplate=restTemplateBuilder.build();
+        RestTemplate restTemplate = restTemplateBuilder.build();
         RequestCallback requestCallback = restTemplate.acceptHeaderRequestCallback(FakeProductDto.class);
         HttpMessageConverterExtractor<FakeProductDto> responseExtractor = new HttpMessageConverterExtractor(FakeProductDto.class, restTemplate.getMessageConverters());
-        FakeProductDto fakeProductDto=
-                restTemplate.execute(genericUrl, HttpMethod.DELETE, requestCallback, responseExtractor,id);
+        FakeProductDto fakeProductDto =
+                restTemplate.execute(genericUrl, HttpMethod.DELETE, requestCallback, responseExtractor, id);
         return fakeProductDto;
         //restTemplate.delete(deleteProductUrl,id);
     }
 
 
     public FakeProductDto addProduct(FakeProductDto fakeProductDto) {
-        RestTemplate restTemplate=restTemplateBuilder.build();
-        ResponseEntity<FakeProductDto> fakeProductDtoResponseEntity= restTemplate.postForEntity(genericUrl,fakeProductDto,FakeProductDto.class);
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        ResponseEntity<FakeProductDto> fakeProductDtoResponseEntity = restTemplate.postForEntity(genericUrl, fakeProductDto, FakeProductDto.class);
         return fakeProductDtoResponseEntity.getBody();
     }
 
 
-
     public FakeProductDto updateProductById(long id, FakeProductDto fakeProductDto) throws ProductNotFoundException {
-        RestTemplate restTemplate=restTemplateBuilder.build();
-        ResponseEntity<FakeProductDto> responseEntity= restTemplate.getForEntity(genericUrl+"/"+id, FakeProductDto.class);
-        if(responseEntity.getBody()==null){
-            throw  new ProductNotFoundException("Product not found with id:"+id);
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        ResponseEntity<FakeProductDto> responseEntity = restTemplate.getForEntity(genericUrl + "/" + id, FakeProductDto.class);
+        if (responseEntity.getBody() == null) {
+            throw new ProductNotFoundException("Product not found with id:" + id);
         }
-        FakeProductDto responseEntityBody=responseEntity.getBody();
-        BeanUtils.copyProperties(fakeProductDto,responseEntityBody);
+        FakeProductDto responseEntityBody = responseEntity.getBody();
+        BeanUtils.copyProperties(fakeProductDto, responseEntityBody);
         RequestCallback requestCallback = restTemplate.httpEntityCallback(fakeProductDto, FakeProductDto.class);
         ResponseExtractor<ResponseEntity<FakeProductDto>> responseExtractor = restTemplate.responseEntityExtractor(FakeProductDto.class);
-        ResponseEntity fakeProductDtoResponseEntity= restTemplate.execute(genericUrl+"/"+id, HttpMethod.PUT, requestCallback, responseExtractor, id);
+        ResponseEntity fakeProductDtoResponseEntity = restTemplate.execute(genericUrl + "/" + id, HttpMethod.PUT, requestCallback, responseExtractor, id);
         return (FakeProductDto) fakeProductDtoResponseEntity.getBody();
 
 

@@ -1,5 +1,6 @@
 package com.ecom.productservice.serviceImpl;
 
+import com.ecom.productservice.exceptions.CategoryNotFoundException;
 import com.ecom.productservice.exceptions.ProductNotFoundException;
 import com.ecom.productservice.models.Category;
 import com.ecom.productservice.models.Product;
@@ -22,18 +23,19 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
     private ProductRepo productRepo;
     private CategoryRepo categoryRepo;
-    Logger logger= LoggerFactory.getLogger(ProductServiceImpl.class);
+    Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
+
     @Autowired
-    public ProductServiceImpl(ProductRepo productRepo,CategoryRepo categoryRepo) {
+    public ProductServiceImpl(ProductRepo productRepo, CategoryRepo categoryRepo) {
         this.productRepo = productRepo;
-        this.categoryRepo=categoryRepo;
+        this.categoryRepo = categoryRepo;
     }
 
     @Override
     public ResponseEntity<Product> getProductById(Long id) throws ProductNotFoundException {
-        Optional<Product> productOptional=productRepo.findById(id);
-        if(!productOptional.isPresent()){
-         throw  new ProductNotFoundException("Product not found with id : "+id);
+        Optional<Product> productOptional = productRepo.findById(id);
+        if (!productOptional.isPresent()) {
+            throw new ProductNotFoundException("Product not found with id : " + id);
         }
         return new ResponseEntity<>(productOptional.get(), HttpStatus.OK);
     }
@@ -41,17 +43,17 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ResponseEntity<List<Product>> getAllProducts() {
 
-        return new ResponseEntity<>(productRepo.findAll(),HttpStatus.OK);
+        return new ResponseEntity<>(productRepo.findAll(), HttpStatus.OK);
     }
 
     @Override
     public Product deleteProductById(long id) throws ProductNotFoundException {
-        Optional<Product> productOptional=productRepo.findById(id);
-        if(!productOptional.isPresent()){
-            throw  new ProductNotFoundException("Product not found with id : "+id);
+        Optional<Product> productOptional = productRepo.findById(id);
+        if (!productOptional.isPresent()) {
+            throw new ProductNotFoundException("Product not found with id : " + id);
         }
         productRepo.delete(productOptional.get());
-    return  productOptional.get();
+        return productOptional.get();
     }
 
     @Override
@@ -65,26 +67,25 @@ public class ProductServiceImpl implements ProductService {
           product.setCategory(categoryOptional.get());
       }
     */
-        Optional<Category> categoryOptional=categoryRepo.findByName(product.getCategory().getName());
-        if(categoryOptional.isPresent()){
+        Optional<Category> categoryOptional = categoryRepo.findByName(product.getCategory().getName());
+        if (categoryOptional.isPresent()) {
             product.setCategory(categoryOptional.get());
-        }
-        else {
+        } else {
             product.setCategory(product.getCategory());
         }
         return productRepo.save(product);
     }
 
     @Override
-    public Product updateProductById(long id,Product product) throws ProductNotFoundException {
-        Optional<Product> productOptional=
+    public Product updateProductById(long id, Product product) throws ProductNotFoundException {
+        Optional<Product> productOptional =
                 productRepo.findById(id);
-        if(!productOptional.isPresent()){
-            logger.error("Product not found with id:"+id);
-            throw  new ProductNotFoundException("Product not found with id:"+id);
+        if (!productOptional.isPresent()) {
+            logger.error("Product not found with id:" + id);
+            throw new ProductNotFoundException("Product not found with id:" + id);
         }
-        Product actualProduct=productOptional.get();
-       /*Checking if category is provided by the client for updation or not*/
+        Product actualProduct = productOptional.get();
+        /*Checking if category is provided by the client for updation or not*/
   /*      if(product.getCategory()!=null&&!product.getCategory().getName().equalsIgnoreCase(actualProduct.getCategory().getName())){
         Optional<Category> categoryOptional= categoryRepo.findByName(product.getCategory().getName()); */
         /*Check if provided category already exists in the database or not. if yes then update the category of the product otherwise
@@ -103,31 +104,30 @@ public class ProductServiceImpl implements ProductService {
         actualProduct.setTitle(product.getTitle());
         actualProduct.setDescription(product.getDescription());
         actualProduct.setPrice(product.getPrice());
-        Optional<Category> categoryOptional=categoryRepo.findByName(product.getCategory().getName());
-        if(categoryOptional.isPresent()){
-          actualProduct.setCategory(categoryOptional.get());
-        }
-        else {
+        Optional<Category> categoryOptional = categoryRepo.findByName(product.getCategory().getName());
+        if (categoryOptional.isPresent()) {
+            actualProduct.setCategory(categoryOptional.get());
+        } else {
             actualProduct.setCategory(product.getCategory());
         }
-        return  productRepo.save(actualProduct);
+        return productRepo.save(actualProduct);
     }
 
     @Override
     public List<String> getAllCategory() {
-        List<Product> products=productRepo.findAll();
-        List<String> categories=new ArrayList<>();
+        List<Product> products = productRepo.findAll();
+        List<String> categories = new ArrayList<>();
         products.stream().forEach(product -> categories.add(product.getCategory().getName()));
         return categories;
     }
 
     @Override
     public ResponseEntity<List<Product>> getInCategory(String category) throws ProductNotFoundException {
-        Optional<Category> categoryOptional=categoryRepo.findByName(category);
-        if(!categoryOptional.isPresent()){
-            throw  new ProductNotFoundException("No such category exists:"+category);
+        Optional<Category> categoryOptional = categoryRepo.findByName(category);
+        if (!categoryOptional.isPresent()) {
+            throw new CategoryNotFoundException("No such category exists:" + category);
         }
-        List<Product> productList=productRepo.findByCategory(categoryOptional.get());
-        return new ResponseEntity<>(productList,HttpStatus.OK);
+        List<Product> productList = productRepo.findByCategory(categoryOptional.get());
+        return new ResponseEntity<>(productList, HttpStatus.OK);
     }
 }
