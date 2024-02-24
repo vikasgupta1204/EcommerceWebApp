@@ -10,6 +10,10 @@ import com.ecom.productservice.services.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -41,10 +45,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<List<Product>> getAllProducts() {
-
-        return new ResponseEntity<>(productRepo.findAll(), HttpStatus.OK);
+    public ResponseEntity<Page<Product>> getAllProducts(int page, int size, String sortBy) {
+        Pageable pageable= PageRequest.of(page,size, Sort.by(sortBy));
+        Page<Product> products=productRepo.findAll(pageable);
+        return ResponseEntity.ok(products);
     }
+
+
 
     @Override
     public Product deleteProductById(long id) throws ProductNotFoundException {
@@ -122,12 +129,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<List<Product>> getInCategory(String category) throws ProductNotFoundException {
+    public ResponseEntity<Page<Product>> getInCategory(String category,int page,int size,String sortBy) throws CategoryNotFoundException {
         Optional<Category> categoryOptional = categoryRepo.findByName(category);
         if (!categoryOptional.isPresent()) {
             throw new CategoryNotFoundException("No such category exists:" + category);
         }
-        List<Product> productList = productRepo.findByCategory(categoryOptional.get());
-        return new ResponseEntity<>(productList, HttpStatus.OK);
+        Pageable pageable=PageRequest.of(page,size,Sort.by(sortBy));
+        Page<Product> productList = productRepo.findByCategory(categoryOptional.get(),pageable);
+        return ResponseEntity.ok(productList);
     }
 }

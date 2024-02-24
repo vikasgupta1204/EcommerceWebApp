@@ -7,19 +7,11 @@ import com.ecom.productservice.models.Product;
 import com.ecom.productservice.services.ProductService;
 import com.ecom.productservice.thirdPartyClients.FakeStoreClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpMethod;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.client.HttpMessageConverterExtractor;
-import org.springframework.web.client.RequestCallback;
-import org.springframework.web.client.RestTemplate;
 
-import java.lang.invoke.MethodHandleInfo;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service("fakeProductServiceImpl")
@@ -53,11 +45,12 @@ public class FakeProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<FakeProductDto> fakeProductDtos = fakeStoreClient.getAllProducts();
+    public ResponseEntity<Page<Product>> getAllProducts(int page, int size, String sortBy) {
+/*        List<FakeProductDto> fakeProductDtos = fakeStoreClient.getAllProducts();
         List<Product> prodLists = new ArrayList<>();
         fakeProductDtos.stream().forEach(fakeProductDto -> prodLists.add(fakeProductDtoToProduct(fakeProductDto)));
-        return new ResponseEntity<>(prodLists, HttpStatus.OK);
+        return new ResponseEntity<>(prodLists, HttpStatus.OK); */
+        return null;
     }
 
 
@@ -96,7 +89,9 @@ public class FakeProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<List<Product>> getInCategory(String category) {
+    public ResponseEntity<Page<Product>> getInCategory(String category, int page, int size, String sortBy) throws ProductNotFoundException {
         return null;
     }
+
+
 }
