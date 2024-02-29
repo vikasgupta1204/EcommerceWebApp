@@ -132,7 +132,7 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<Page<Product>> getInCategory(String category,int page,int size,String sortBy) throws CategoryNotFoundException {
         Optional<Category> categoryOptional = categoryRepo.findByName(category);
         if (!categoryOptional.isPresent()) {
-            throw new CategoryNotFoundException("No such category exists:" + category);
+            throw new ProductNotFoundException("No such product found with category as:" + category);
         }
         Pageable pageable=PageRequest.of(page,size,Sort.by(sortBy));
         Page<Product> productList = productRepo.findByCategory(categoryOptional.get(),pageable);

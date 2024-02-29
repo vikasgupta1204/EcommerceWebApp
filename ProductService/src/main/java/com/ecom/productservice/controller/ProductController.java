@@ -22,15 +22,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-    CategoryRepo categoryRepo;
-    ProductRepo productRepo;
+//    CategoryRepo categoryRepo;
+//    ProductRepo productRepo;
     private ProductService productService;
 
     @Autowired
-    public ProductController(@Qualifier("SelfProductServiceImpl") ProductService productService, CategoryRepo categoryRepo, ProductRepo productRepo) {
+    public ProductController(@Qualifier("SelfProductServiceImpl") ProductService productService) {
         this.productService = productService;
-        this.categoryRepo = categoryRepo;
-        this.productRepo = productRepo;
+      //  this.categoryRepo = categoryRepo;
+       // this.productRepo = productRepo;
     }
 
     @Operation(summary = "Get a product by id", description = "Returns a product as per the id")
@@ -98,7 +98,7 @@ public class ProductController {
         return productService.getInCategory(category, page, size, sortBy);
     }
 
-    @PostMapping("/addAll")
+ /*   @PostMapping("/addAll")
     public void addAllProducts(@RequestBody List<Product> products) {
         for (Product product : products) {
 
@@ -111,6 +111,8 @@ public class ProductController {
             productRepo.save(product);
         }
     }
+    */
+
 }
 
 

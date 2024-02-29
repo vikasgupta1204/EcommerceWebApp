@@ -1,6 +1,5 @@
 package com.ecom.productservice.controller;
 
-import com.ecom.productservice.exceptions.CategoryNotFoundException;
 import com.ecom.productservice.models.Category;
 import com.ecom.productservice.services.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/categories")
@@ -45,14 +43,22 @@ public class CategoryController {
         return categoryService.getAllCategories();
     }
 
+    @Operation(summary = "Update Category", description = "Update category by id otherwise it throws an exception")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Update Category by id"),
+            @ApiResponse(responseCode = "404", description = "Not found- The category was not found")})
+    @PutMapping("/{id}")
+    public Category updateCategory(@PathVariable("id") long id,@RequestParam String categoryName) {
+       return categoryService.updateCategory(id, categoryName);
 
-    public Category updateCategory(long id, Category category) {
-        return null;
     }
 
+    @Operation(summary = "Delete Category", description = "Delete category by id otherwise it throws an exception")
+    @ApiResponses(value = {@ApiResponse(responseCode = "202", description = "Delete Category by id"),
+            @ApiResponse(responseCode = "404", description = "Not found- The category was not found")})
+    @DeleteMapping("/{id}")
+    public Category deleteCategory(@PathVariable long id) {
 
-    public Category deleteCategory(long id) {
-        return null;
+        return categoryService.deleteCategory(id);
     }
 
     @Operation(summary = "Get a category by name", description = "Returns a category as per the name")

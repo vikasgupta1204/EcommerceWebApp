@@ -39,13 +39,20 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category updateCategory(long id, Category category) {
-        return null;
+    public Category updateCategory(long id, String categoryName) {
+        Category category = categoryRepo.findById(id).
+                orElseThrow(() -> new CategoryNotFoundException("Category not found with id " + id));
+        category.setName(categoryName);
+        Category updatedCategory= categoryRepo.save(category);
+        return updatedCategory;
     }
 
     @Override
     public Category deleteCategory(long id) {
-        return null;
+        Category categoryToDelete= categoryRepo.findById(id).
+                orElseThrow(() -> new CategoryNotFoundException("Category not found with id " + id));
+        categoryRepo.delete(categoryToDelete);
+        return categoryToDelete;
     }
 
     @Override

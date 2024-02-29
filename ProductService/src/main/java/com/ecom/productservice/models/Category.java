@@ -1,6 +1,7 @@
 package com.ecom.productservice.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
@@ -24,6 +25,6 @@ public class Category extends BaseModel{
       Category has a collection of Products
     , it serializes them as well, leading to an infinite loop.*/
    @JsonIgnore
-   @OneToMany(mappedBy = "category",fetch = FetchType.LAZY)
+   @OneToMany(mappedBy = "category",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
     private List<Product> products;
 }
