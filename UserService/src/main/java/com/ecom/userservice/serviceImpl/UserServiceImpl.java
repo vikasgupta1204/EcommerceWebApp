@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
         }
 
         Token token = new Token();
-        token.setToken(UUID.randomUUID().toString());
+        token.setValue(UUID.randomUUID().toString());
         token.setUser(user);
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         long thirtyMinutes = 30 * 60 * 1000;
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService {
         token.setExpiryDate(timestamp);
        Token savedToken=  tokenRepo.save(token);
         logger.info("User logged in successfully:" + user.getEmail());
-        return ResponseEntity.ok(savedToken);
+        return new ResponseEntity<>(savedToken, HttpStatus.OK);
     }
 
     @Override
@@ -84,7 +85,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<String> logout(String token) {
-        Token token1 = tokenRepo.findByToken(token);
+        Token token1 = tokenRepo.findByValue(token);
         if (token1 == null) {
             logger.error("Token not found:" + token);
             throw new RuntimeException("Token not found");

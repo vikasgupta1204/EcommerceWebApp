@@ -14,7 +14,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class Token extends BaseModel{
-    private String token;
+    private String value;
 
     @ManyToOne
     private User user;
