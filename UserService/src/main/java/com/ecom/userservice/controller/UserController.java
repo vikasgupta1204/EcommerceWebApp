@@ -1,9 +1,13 @@
 package com.ecom.userservice.controller;
 
 import com.ecom.userservice.dtos.LoginRequestDto;
+import com.ecom.userservice.dtos.LoginResponseDto;
 import com.ecom.userservice.dtos.SignUpRequestDto;
+import com.ecom.userservice.dtos.SignUpResponseDto;
+import com.ecom.userservice.model.Token;
 import com.ecom.userservice.model.User;
 import com.ecom.userservice.service.UserService;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +22,11 @@ public class UserController {
         this.userService = userService;
     }
     @PostMapping("/signup")
-    public ResponseEntity<User> signUp(@RequestBody SignUpRequestDto signUpRequestDto) {
-        return userService.signUp(signUpRequestDto);
+    public ResponseEntity<SignUpResponseDto> signUp(@RequestBody SignUpRequestDto signUpRequestDto) {
+        return userService.signUp(signUpRequestDto.getName(),signUpRequestDto.getEmail(), signUpRequestDto.getPassword(), signUpRequestDto.getRoles());
     }
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto) {
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         return userService.login(loginRequestDto);
     }
 
@@ -31,6 +35,8 @@ public class UserController {
         return userService.logout(token);
     }
 
-
-
+    @PostMapping("/validateToken")
+    public ResponseEntity<User> validateToken(@RequestParam("token") String token) {
+        return userService.validateToken(token);
+    }
 }

@@ -15,9 +15,9 @@ import java.util.Date;
 @Setter
 public class Token extends BaseModel{
     private String value;
-
     @ManyToOne
     private User user;
-    private Timestamp expiryDate;
+    private Date expiryAt;
+    private boolean isDeleted;
 
 }
