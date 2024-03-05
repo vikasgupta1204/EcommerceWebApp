@@ -5,6 +5,7 @@ import com.ecom.productservice.exceptions.ProductNotFoundException;
 import com.ecom.productservice.models.Category;
 import com.ecom.productservice.models.Product;
 import com.ecom.productservice.services.ProductService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -40,7 +41,7 @@ class ProductControllerTest {
        }
    */
     @Test
-    void getProductById() throws ProductNotFoundException {
+    void getProductById() throws ProductNotFoundException, JsonProcessingException {
         long id = 1L;
         Product product = new Product();
         product.setId(id);

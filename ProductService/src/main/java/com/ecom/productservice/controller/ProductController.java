@@ -9,6 +9,7 @@ import com.ecom.productservice.repo.CategoryRepo;
 import com.ecom.productservice.repo.ProductRepo;
 import com.ecom.productservice.security.services.AuthenticationService;
 import com.ecom.productservice.services.ProductService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -46,7 +47,7 @@ public class ProductController {
             @ApiResponse(responseCode = "404", description = "Not found- The product was not found")})
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@RequestHeader("authToken") String authToken,
-            @PathVariable("id") Long id) throws ProductNotFoundException {
+            @PathVariable("id") Long id) throws ProductNotFoundException, JsonProcessingException {
         if(!authenticationService.authenticate(authToken)){
             ErrorDto errorDto=ErrorDto.builder().message("You are not authorized")
                     .path("/products/{id}").httpStatus(403).errorCode("403")
