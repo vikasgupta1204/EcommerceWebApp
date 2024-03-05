@@ -66,4 +66,5 @@ public class UserController {
     public ResponseEntity<User> validateToken(@RequestParam("token") String token) {
         return userService.validateToken(token);
     }
+
 }

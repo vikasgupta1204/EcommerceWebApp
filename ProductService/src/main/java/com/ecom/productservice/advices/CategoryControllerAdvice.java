@@ -1,8 +1,10 @@
 package com.ecom.productservice.advices;
 
 import com.ecom.productservice.controller.CategoryController;
+import com.ecom.productservice.dtos.ErrorDto;
 import com.ecom.productservice.dtos.ExceptionDto;
 import com.ecom.productservice.exceptions.CategoryNotFoundException;
+import com.ecom.productservice.exceptions.CustomResponseException;
 import com.ecom.productservice.exceptions.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,5 +21,11 @@ public class CategoryControllerAdvice {
         exceptionDto.setMessage(categoryNotFoundException.getMessage());
         exceptionDto.setStatus("Failure");
         return new ResponseEntity<>(exceptionDto, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CustomResponseException.class)
+    public ResponseEntity<?> handleCustomResponseException(CustomResponseException ex) {
+        ErrorDto errorDto = ex.getErrorDto();
+        return ResponseEntity.status(errorDto.getHttpStatus()).body(errorDto);
     }
 }

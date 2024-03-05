@@ -1,10 +1,13 @@
 package com.ecom.productservice.controller;
 
+import com.ecom.productservice.dtos.ErrorDto;
+import com.ecom.productservice.exceptions.CustomResponseException;
 import com.ecom.productservice.exceptions.ProductNotFoundException;
 import com.ecom.productservice.models.Category;
 import com.ecom.productservice.models.Product;
 import com.ecom.productservice.repo.CategoryRepo;
 import com.ecom.productservice.repo.ProductRepo;
+import com.ecom.productservice.security.services.AuthenticationService;
 import com.ecom.productservice.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -16,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,10 +30,13 @@ public class ProductController {
 //    CategoryRepo categoryRepo;
 //    ProductRepo productRepo;
     private ProductService productService;
+    AuthenticationService authenticationService;
 
     @Autowired
-    public ProductController(@Qualifier("SelfProductServiceImpl") ProductService productService) {
+    public ProductController(@Qualifier("SelfProductServiceImpl") ProductService productService,
+                             AuthenticationService authenticationService) {
         this.productService = productService;
+        this.authenticationService=authenticationService;
       //  this.categoryRepo = categoryRepo;
        // this.productRepo = productRepo;
     }
@@ -37,7 +45,16 @@ public class ProductController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successfully fetched"),
             @ApiResponse(responseCode = "404", description = "Not found- The product was not found")})
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) throws ProductNotFoundException {
+    public ResponseEntity<Product> getProductById(@RequestHeader("authToken") String authToken,
+            @PathVariable("id") Long id) throws ProductNotFoundException {
+        if(!authenticationService.authenticate(authToken)){
+            ErrorDto errorDto=ErrorDto.builder().message("You are not authorized")
+                    .path("/products/{id}").httpStatus(403).errorCode("403")
+                    .errorDetails("You are not authorized to access this resource")
+                    .timestamp(Timestamp.valueOf(LocalDateTime.now())).errorType("Authentication error")
+                    .build();
+            throw  new CustomResponseException(errorDto);
+        }
         return productService.getProductById(id);
     }
 

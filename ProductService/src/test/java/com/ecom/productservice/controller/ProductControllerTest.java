@@ -48,7 +48,7 @@ class ProductControllerTest {
         product.setDescription("Test Description");
         product.setPrice(100L);
         when(productService.getProductById(id)).thenReturn(ResponseEntity.ok(product));
-        ResponseEntity<Product> responseEntity = productController.getProductById(id);
+        ResponseEntity<Product> responseEntity = productController.getProductById("",id);
         assertNotNull(responseEntity);
         assertEquals(1L, responseEntity.getBody().getId());
         assertEquals(200, responseEntity.getStatusCodeValue());
@@ -61,7 +61,7 @@ class ProductControllerTest {
     void getProductById_ProductNotFound() throws ProductNotFoundException {
         long id = 1L;
         when(productService.getProductById(id)).thenThrow(new ProductNotFoundException("Product not found with id : " + id));
-        assertThrows(ProductNotFoundException.class, () -> productController.getProductById(id));
+        assertThrows(ProductNotFoundException.class, () -> productController.getProductById("",id));
     }
 
     @Test
