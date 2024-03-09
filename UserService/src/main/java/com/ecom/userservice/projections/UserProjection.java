@@ -1,7 +1,5 @@
 package com.ecom.userservice.projections;
 
-import com.ecom.userservice.projections.RoleProjection;
-
 import java.util.List;
 
 /**

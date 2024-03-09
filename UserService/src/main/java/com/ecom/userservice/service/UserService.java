@@ -2,9 +2,7 @@ package com.ecom.userservice.service;
 
 import com.ecom.userservice.dtos.LoginRequestDto;
 import com.ecom.userservice.dtos.LoginResponseDto;
-import com.ecom.userservice.dtos.SignUpRequestDto;
 import com.ecom.userservice.dtos.SignUpResponseDto;
-import com.ecom.userservice.model.Token;
 import com.ecom.userservice.model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
