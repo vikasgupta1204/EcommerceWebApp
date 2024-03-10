@@ -46,16 +46,16 @@ public class ProductController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Successfully fetched"),
             @ApiResponse(responseCode = "404", description = "Not found- The product was not found")})
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@RequestHeader("authToken") String authToken,
+    public ResponseEntity<Product> getProductById(//@RequestHeader("authToken") String authToken,
             @PathVariable("id") Long id) throws ProductNotFoundException, JsonProcessingException {
-        if(!authenticationService.authenticate(authToken)){
-            ErrorDto errorDto=ErrorDto.builder().message("You are not authorized")
-                    .path("/products/{id}").httpStatus(403).errorCode("403")
-                    .errorDetails("You are not authorized to access this resource")
-                    .timestamp(Timestamp.valueOf(LocalDateTime.now())).errorType("Authentication error")
-                    .build();
-            throw  new CustomResponseException(errorDto);
-        }
+//        if(!authenticationService.authenticate(authToken)){
+//            ErrorDto errorDto=ErrorDto.builder().message("You are not authorized")
+//                    .path("/products/{id}").httpStatus(403).errorCode("403")
+//                    .errorDetails("You are not authorized to access this resource")
+//                    .timestamp(Timestamp.valueOf(LocalDateTime.now())).errorType("Authentication error")
+//                    .build();
+//            throw  new CustomResponseException(errorDto);
+//        }
         return productService.getProductById(id);
     }
 
