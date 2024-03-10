@@ -1,4 +1,4 @@
-package com.ecom.userservice.security;
+package com.ecom.userservice.security.configs;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -28,6 +28,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Optional;
 import java.util.UUID;
 
 @Configuration
@@ -72,16 +73,17 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails userDetails = User.builder()
-                .username("user")
-                .password("$2a$16$xffroAewmM4JoEFTaLdoVOfp3mRZoFLj2JsetBNZ3SxIE.ia9q6tC")
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(userDetails);
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        UserDetails userDetails = User.builder()
+//                .username("user")
+//                .password("$2a$16$xffroAewmM4JoEFTaLdoVOfp3mRZoFLj2JsetBNZ3SxIE.ia9q6tC")
+//                .roles("USER")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(userDetails);
+//        Optional<User> userOptional=userRepository.findByEmail()
+//    }
 
 //    @Bean
 //    public RegisteredClientRepository registeredClientRepository() {
