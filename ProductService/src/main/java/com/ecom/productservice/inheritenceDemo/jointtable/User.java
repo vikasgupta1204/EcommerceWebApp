@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Inheritance(strategy = InheritanceType.JOINED)
-@Entity(name="jt_user")
+@Entity(name = "jt_user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

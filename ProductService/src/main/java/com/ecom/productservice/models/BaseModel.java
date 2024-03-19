@@ -7,13 +7,11 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Setter
 @Getter
 @MappedSuperclass
 public class BaseModel {
-   @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 }

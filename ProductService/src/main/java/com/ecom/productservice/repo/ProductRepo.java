@@ -17,6 +17,7 @@ import java.util.Optional;
 public interface ProductRepo extends JpaRepository<Product, Long> {
     @Override
     Optional<Product> findById(Long id);
+
     Page<Product> findByCategory(Category category, Pageable pageable);
 
     @Query("select p.id as id,p.title as title from Product  p where p.title =:title")

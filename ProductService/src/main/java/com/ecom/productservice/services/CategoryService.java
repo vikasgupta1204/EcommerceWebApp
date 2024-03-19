@@ -8,9 +8,14 @@ import java.util.List;
 @Service
 public interface CategoryService {
     Category saveCategory(Category category);
+
     Category findByCategoryId(long categoryId);
+
     List<Category> getAllCategories();
-    Category updateCategory(long id,String categoryName);
+
+    Category updateCategory(long id, String categoryName);
+
     Category deleteCategory(long id);
+
     Category findByCategoryName(String categoryName);
 }

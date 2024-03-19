@@ -2,14 +2,11 @@ package com.ecom.productservice.thirdPartyClients;
 
 import com.ecom.productservice.dtos.FakeProductDto;
 import com.ecom.productservice.exceptions.ProductNotFoundException;
-import com.ecom.productservice.models.Category;
-import com.ecom.productservice.models.Product;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpMessageConverterExtractor;
@@ -17,17 +14,14 @@ import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static java.util.Objects.nonNull;
 
 @Component
 public class FakeStoreClient {
 
-    private String genericUrl;
     RestTemplateBuilder restTemplateBuilder;
+    private String genericUrl;
 
     @Autowired
     public FakeStoreClient(RestTemplateBuilder restTemplateBuilder, @Value("${fakestore.api.url}") String genericUrl) {

@@ -9,10 +9,16 @@ import java.util.List;
 
 public interface ProductService {
     ResponseEntity<Product> getProductById(Long id) throws ProductNotFoundException;
+
     ResponseEntity<Page<Product>> getAllProducts(int page, int size, String sortBy);
+
     Product deleteProductById(long id) throws ProductNotFoundException;
+
     Product addProduct(Product product);
-    Product updateProductById(long id,Product product) throws ProductNotFoundException;
+
+    Product updateProductById(long id, Product product) throws ProductNotFoundException;
+
     List<String> getAllCategory();
-    ResponseEntity<Page<Product>> getInCategory(String category,int page,int size,String sortBy) throws ProductNotFoundException;
+
+    ResponseEntity<Page<Product>> getInCategory(String category, int page, int size, String sortBy) throws ProductNotFoundException;
 }

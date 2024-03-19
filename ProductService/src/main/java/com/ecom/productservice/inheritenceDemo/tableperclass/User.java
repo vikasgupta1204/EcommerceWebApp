@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Entity(name="user_tpc")
+@Entity(name = "user_tpc")
 
 /*It will create table for all the entities */
 public class User {

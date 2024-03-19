@@ -19,6 +19,7 @@ class CategoryControllerTest {
     private CategoryController categoryController;
     @MockBean
     private CategoryService categoryService;
+
     @Test
     void saveCategory() {
         Category category = new Category();
@@ -45,6 +46,7 @@ class CategoryControllerTest {
         assertEquals("Test category", foundCategory.getName());
         verify(categoryService).findByCategoryId(id);
     }
+
     @Test
     void findByCategoryId_CategoryNotExist() {
         long id = 1L;

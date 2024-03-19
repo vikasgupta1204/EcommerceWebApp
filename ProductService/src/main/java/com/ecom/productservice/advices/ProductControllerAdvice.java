@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 //@ControllerAdvice
 @ControllerAdvice(assignableTypes = {ProductController.class})
@@ -23,6 +22,7 @@ public class ProductControllerAdvice {
         exceptionDto.setStatus("Failure");
         return new ResponseEntity<>(exceptionDto, HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(CustomResponseException.class)
     public ResponseEntity<?> handleCustomResponseException(CustomResponseException ex) {
         ErrorDto errorDto = ex.getErrorDto();

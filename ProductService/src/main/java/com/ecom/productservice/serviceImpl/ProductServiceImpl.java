@@ -25,9 +25,9 @@ import java.util.Optional;
 
 @Service("SelfProductServiceImpl")
 public class ProductServiceImpl implements ProductService {
+    Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
     private ProductRepo productRepo;
     private CategoryRepo categoryRepo;
-    Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Autowired
     public ProductServiceImpl(ProductRepo productRepo, CategoryRepo categoryRepo) {
@@ -46,11 +46,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseEntity<Page<Product>> getAllProducts(int page, int size, String sortBy) {
-        Pageable pageable= PageRequest.of(page,size, Sort.by(sortBy));
-        Page<Product> products=productRepo.findAll(pageable);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<Product> products = productRepo.findAll(pageable);
         return ResponseEntity.ok(products);
     }
-
 
 
     @Override
@@ -129,13 +128,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<Page<Product>> getInCategory(String category,int page,int size,String sortBy) throws CategoryNotFoundException {
+    public ResponseEntity<Page<Product>> getInCategory(String category, int page, int size, String sortBy) throws CategoryNotFoundException {
         Optional<Category> categoryOptional = categoryRepo.findByName(category);
         if (!categoryOptional.isPresent()) {
             throw new ProductNotFoundException("No such product found with category as:" + category);
         }
-        Pageable pageable=PageRequest.of(page,size,Sort.by(sortBy));
-        Page<Product> productList = productRepo.findByCategory(categoryOptional.get(),pageable);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        Page<Product> productList = productRepo.findByCategory(categoryOptional.get(), pageable);
         return ResponseEntity.ok(productList);
     }
 }

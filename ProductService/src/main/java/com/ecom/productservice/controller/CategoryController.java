@@ -47,8 +47,8 @@ public class CategoryController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Update Category by id"),
             @ApiResponse(responseCode = "404", description = "Not found- The category was not found")})
     @PutMapping("/{id}")
-    public Category updateCategory(@PathVariable("id") long id,@RequestParam String categoryName) {
-       return categoryService.updateCategory(id, categoryName);
+    public Category updateCategory(@PathVariable("id") long id, @RequestParam String categoryName) {
+        return categoryService.updateCategory(id, categoryName);
 
     }
 

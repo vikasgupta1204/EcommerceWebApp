@@ -6,11 +6,7 @@ import com.ecom.productservice.models.Category;
 import com.ecom.productservice.models.Product;
 import com.ecom.productservice.services.ProductService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -210,6 +205,6 @@ class ProductControllerTest {
         List<Product> products = java.util.List.of(product1, product2, product3, product4);
         Page<Product> productPage = new PageImpl<>(products, PageRequest.of(0, 10, Sort.by(sortBy)), products.size());
         when(productService.getInCategory("Test Category4", page, size, sortBy)).thenThrow(new CategoryNotFoundException("Category not found with name : Test Category4"));
-       assertThrows(CategoryNotFoundException.class, () -> productController.getInCategory("Test Category4", page, size, sortBy));
+        assertThrows(CategoryNotFoundException.class, () -> productController.getInCategory("Test Category4", page, size, sortBy));
     }
 }

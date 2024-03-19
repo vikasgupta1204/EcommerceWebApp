@@ -5,7 +5,6 @@ import com.ecom.productservice.dtos.ErrorDto;
 import com.ecom.productservice.dtos.ExceptionDto;
 import com.ecom.productservice.exceptions.CategoryNotFoundException;
 import com.ecom.productservice.exceptions.CustomResponseException;
-import com.ecom.productservice.exceptions.ProductNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
