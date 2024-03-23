@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +29,18 @@ public class ProductServiceImpl implements ProductService {
     Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
     private ProductRepo productRepo;
     private CategoryRepo categoryRepo;
-
+    private RestTemplate restTemplate;
     @Autowired
-    public ProductServiceImpl(ProductRepo productRepo, CategoryRepo categoryRepo) {
+    public ProductServiceImpl(ProductRepo productRepo, CategoryRepo categoryRepo,RestTemplate restTemplate) {
         this.productRepo = productRepo;
         this.categoryRepo = categoryRepo;
+        this.restTemplate=restTemplate;
     }
 
     @Override
     public ResponseEntity<Product> getProductById(Long id) throws ProductNotFoundException {
+        ResponseEntity<Object> response=restTemplate.getForEntity("http://userservice/user/getMe",Object.class);
+        System.out.println(response);
         Optional<Product> productOptional = productRepo.findById(id);
         if (!productOptional.isPresent()) {
             throw new ProductNotFoundException("Product not found with id : " + id);

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
 
+    @Value("${server.port}")
+    String port;
     UserService userService;
     @Autowired
     public UserController(UserService userService) {
@@ -65,6 +68,12 @@ public class UserController {
     @PostMapping("/validateToken")
     public ResponseEntity<User> validateToken(@RequestParam("token") String token) {
         return userService.validateToken(token);
+    }
+
+    @GetMapping("/getMe")
+    public ResponseEntity<String> testDiscoveryServer(){
+        String message = "I am called successfully for port:"+port;
+        return ResponseEntity.ok("{\"message\": \"" + message + "\"}");
     }
 
 }
